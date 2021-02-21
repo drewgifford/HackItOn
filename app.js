@@ -4,8 +4,22 @@ const io = require("socket.io")({
         origin: '*',
       }
 })
+var express = require("express");
 var randomWords = require('random-words');
 var querystring = require('querystring');
+const app = express();
+const http = require('http');
+app.use(express.json());
+const path = require("path");
+
+
+app.use('/static', express.static(__dirname + '/revouc2021/static/'));
+
+app.get('/', (req, res) => {
+    console.log("test");
+    res.sendFile(path.join(__dirname+'/revouc2021/templates/index.html'));
+})
+
 var checkWord = require('check-word'),
     words     = checkWord('en');
 var games = {
@@ -502,6 +516,9 @@ io.on('connection', function(socket) {
 
 
 io.listen(6942);
+const server = http.createServer(app);
+const port = 80;
+server.listen(port);
 
 function shuffleArray(a) {
     var j, x, i;

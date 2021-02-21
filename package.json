@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "http": "0.0.1-security",
     "http2": "^3.3.7",
+    "path": "^0.12.7",
     "querystring": "^0.2.1",
     "random-words": "^1.1.1",
     "socket.io": "^3.1.1"
