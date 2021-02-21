@@ -30,7 +30,8 @@ const tasks = {
         "fixBugs": {
             "id": "fixBugs",
             "points": 10,
-            "name": "Fix Bugs in Program"
+            "name": "Fix Bugs in Program",
+            "user": true
         },
         "crackTheCode": {
             "id": "crackTheCode",
@@ -56,7 +57,8 @@ const tasks = {
             "id": "calibration",
             "points": 10,
             "prereq": "firewall",
-            "name": "Network Calibration"
+            "name": "Network Calibration",
+            "user": true
         },
         "installRam": {
             "id": "installRam",
@@ -81,7 +83,17 @@ io.on('connection', function(socket) {
 
     // Disconnect listener
     socket.on('disconnect', function() {
-        console.log('Client disconnected.');
+        /*console.log('Client disconnected.');
+        var roomInt = getCode(socket);
+        if(!roomInt) return;
+        for(var p in games[code]["players"]){
+            if(p == socket.id){
+                delete games[code]["players"][p];
+                io.to(gcode.toString()).emit("update", games[gcode]);
+                break;
+            }
+        }
+        */
     });
 
     socket.on('createGame', (name) => {
@@ -161,7 +173,7 @@ io.on('connection', function(socket) {
         game["status"] = 1;
 
         //Game will take 3 minutes
-        const minutes = 3;
+        const minutes = 4;
         var endDate = new Date(Date.now() + minutes * 60000);
         game["end"] = endDate.getMilliseconds();
 
@@ -436,12 +448,9 @@ io.on('connection', function(socket) {
         console.log(taskId);
         var code = getCode(socket);
         if(!code) return;
+        
         var taskObj = tasks["basic"][taskId];
-        var taskPoints = taskObj["points"];
-        var totalPoints = games[code]["points"]
-        totalPoints= parseInt(totalPoints + taskPoints);
-
-        games[code]["points"] = totalPoints;
+        
 
         var playerTasks = games[code]["players"][socket.id]["tasks"];
        
@@ -453,6 +462,16 @@ io.on('connection', function(socket) {
         if(taskId == "installRam"){
             globalFinishTask("downloadRam", code);
             globalFinishTask("installRam", code);
+        } else {
+           
+            var taskPoints = taskObj["points"];
+            if(taskObj["user"]){
+                taskPoints = taskPoints/Object.size(games[code]["players"]);
+            }
+            var totalPoints = games[code]["points"]
+            
+            totalPoints= parseInt(totalPoints + taskPoints);
+            games[code]["points"] = totalPoints;
         }
 
         addTasksFrom(taskId, code);
@@ -463,8 +482,10 @@ io.on('connection', function(socket) {
             io.to(code.toString()).emit("gameOver", true);
         }
     });
-
+    var globalBlacklist = [];
     function globalFinishTask(taskId, code){
+        if(globalBlacklist.includes(taskId)){ return};
+        globalBlacklist.push(taskId)
         var taskObj = tasks["basic"][taskId];
             var taskPoints = taskObj["points"];
             var totalPoints = games[code]["points"]

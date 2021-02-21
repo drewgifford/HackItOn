@@ -63,7 +63,7 @@ $(document).ready(function(){
         $("#content").load(`${path}/html/tasks.html`, function(){
             
             update();
-            var minutes = 3;
+            var minutes = 4;
             var time = minutes*60;
             var currentTime = time;
 
@@ -399,7 +399,7 @@ $(document).ready(function(){
                 $(".notecard").each(function(){
                     var left = parseFloat($(this).css("left").split("p")[0]);
                     var top = parseFloat($(this).css("top").split("p")[0]);
-                    var rotation = Math.random()*360;
+                    var rotation = Math.random()*180-90;
                     $(this).find(".notecard-inner").css("transform",`rotate(${rotation}deg)`);
                     left+=((Math.random()*250)-250)
                     top+=((Math.random()*250)-250)
@@ -426,11 +426,11 @@ $(document).ready(function(){
         incorrectAudio.play();
     });
     var successPlaying = false;
-
+    var gameOver = false;
     socket.on("globalFinish", (currentTaskId) => {
         console.log("Here we go", selectedTask, currentTaskId);
 
-        if(currentTaskId == selectedTask && !successPlaying){
+        if(currentTaskId == selectedTask && !successPlaying && !gameOver){
             successAudio.play();
             $("#content").append("<div class='success'><h1>Task Complete!</h1></div>");
             $("body").append("<div class='background'></div>");
@@ -452,6 +452,7 @@ $(document).ready(function(){
         window.reload();
     });
     socket.on("gameOver", (win) => {
+        gameOver = true;
 
         if(win){
             $("#content").append("<div class='success'><h1>You Win!</h1></div>");
