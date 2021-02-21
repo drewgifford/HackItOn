@@ -63,7 +63,7 @@ $(document).ready(function(){
         $("#content").load(`${path}/html/tasks.html`, function(){
             
             update();
-            var minutes = 2;
+            var minutes = 3;
             var time = minutes*60;
             var currentTime = time;
 
@@ -355,7 +355,7 @@ $(document).ready(function(){
             else if (id == "installRam"){
                 $(".ramKeySubmit").on("click", function(){
                     val = $(".ramKey input[type='text']").val();
-                    if(val != game["ramcode"]){
+                    if(val != game["rampass"]){
                         $("#error").html("Invalid Password");
                     } else {
                         $(".ramKeySubmit").off("click");
@@ -455,7 +455,7 @@ $(document).ready(function(){
         if(win){
             $("#content").append("<div class='success'><h1>You Win!</h1></div>");
         } else {
-            $("#content").append("<div class='success' style='color: red !important'><h1>You Lose.</h1></div>");
+            $("#content").append("<div class='success'><h1 style='color: red !important'>You Lose.</h1></div>");
         }
 
 

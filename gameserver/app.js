@@ -146,8 +146,8 @@ io.on('connection', function(socket) {
         var game = games[roomInt];
         game["status"] = 1;
 
-        //Game will take 5 minutes
-        const minutes = 2;
+        //Game will take 3 minutes
+        const minutes = 3;
         var endDate = new Date(Date.now() + minutes * 60000);
         game["end"] = endDate.getMilliseconds();
 
@@ -208,7 +208,7 @@ io.on('connection', function(socket) {
         //On game end
         setTimeout(function(){
 
-            io.to(roomInt.toString()).emit("gameOver", games[roomInt]);
+            io.to(roomInt.toString()).emit("gameOver", false);
 
         }, (minutes * 60000));
 
@@ -445,26 +445,41 @@ io.on('connection', function(socket) {
         games[code]["players"][socket.id]["tasks"] = playerTasks;
 
         if(taskId == "installRam"){
-            globalFinishTask("downloadRam");
-            globalFinishTask("installRam");
+            globalFinishTask("downloadRam", code);
+            globalFinishTask("installRam", code);
         }
 
         addTasksFrom(taskId, code);
         //SEND UPDATE TO ENTIRE ROOM
         io.to(code.toString()).emit("update", games[code]);
+
+        if(totalPoints >= 100){
+            io.to(code.toString()).emit("gameOver", true);
+        }
     });
 
     function globalFinishTask(taskId, code){
+        var taskObj = tasks["basic"][taskId];
+            var taskPoints = taskObj["points"];
+            var totalPoints = games[code]["points"]
+            totalPoints= parseInt(totalPoints + taskPoints);
+
+            games[code]["points"] = totalPoints;
         for(var p in games[code]["players"]){
             var player = games[code]["players"][p];
 
             var playerTasks = player["tasks"];
+
+            
    
             playerTasks = playerTasks.filter(function(k){
                 return k.id != taskId;
             });
             games[code]["players"][[p]]["tasks"] = playerTasks;
 
+        }
+        if(totalPoints >= 100){
+            io.to(code.toString()).emit("gameOver", true);
         }
         io.to(code.toString()).emit("globalFinish", taskId);
     }
