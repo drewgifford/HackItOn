@@ -1,14 +1,24 @@
 <html>
 
     <head>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
         <title>Hack It On!</title>
+        <link rel="stylesheet" href="/static/css/index.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
 
 
     <body>
+        <div id="taskbar-container">
+            <div class="taskbar hidden"><span id="points">0</span>% - <span id="time">5:30</span></div>
+        </div>
+        <div id="content">
+
+        </div>
 
 
-
+        <canvas id="bgCanvas"></canvas>
     </body>
 
     {% extends "footer.html" %}
