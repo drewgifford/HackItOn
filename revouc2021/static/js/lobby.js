@@ -214,19 +214,19 @@ $(document).ready(function(){
                     $(".callout").remove();
                     $("#modem").addClass("shake");
                     
-                    //connectAudio.play();
+                    connectAudio.play();
                     audioArray.push(connectAudio);
                     var t = setTimeout(function(){
                         if(thisId != currentTask){ return };
                         $(".internetPass").removeClass("hidden");
                         $(".internetPassSubmit").on("click", function(){
                             val = $(".internetPass input[type='text']").val();
-                           // if(val != game["netpass"]){
-                           //     $("#error").html("Invalid Password");
-                           // } else {
+                            if(val != game["netpass"]){
+                                $("#error").html("Invalid Password");
+                            } else {
                                 finishTask(id);
                                 return;
-                           // }
+                            }
                         });
                     }, 15400);
                 })
@@ -257,9 +257,9 @@ $(document).ready(function(){
             else if(id == "calibration"){
                 $(".intraPassSubmit").on("click", function(){
                     val = $(".intraPass input[type='text']").val();
-                    //if(val != game["intrapass"]){
-                    //    $("#error").html("Invalid Password");
-                    //} else {
+                    if(val != game["intrapass"]){
+                        $("#error").html("Invalid Password");
+                    } else {
                         var i = 0;
                         $(".intraPassSubmit").off("click");
                         $(".intraPass").remove();
@@ -336,7 +336,7 @@ $(document).ready(function(){
                         }
                         playRound(1);
 
-                    //}
+                    }
                 });
             }
             else if(id == "crackTheCode"){
