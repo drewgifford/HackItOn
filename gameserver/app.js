@@ -18,7 +18,7 @@ const tasks = {
             "points": 10,
             "name": "Fix Bugs in Program"
         },
-        "crackCode": {
+        "crackTheCode": {
             "id": "crackTheCode",
             "points": 40,
             "name": "Crack the Code",
@@ -261,8 +261,11 @@ io.on('connection', function(socket) {
         }
 
         var complete = true;
+        
         for(var i = 0; i < 3; i++){
             var ca = games[code]["words"][i].toLowerCase();
+            console.log(ca);
+            console.log( games[code]["guessed"][i].join("") );
             if(ca != games[code]["guessed"][i].join("").toLowerCase()){
                 complete = false;
                 break;
@@ -270,22 +273,11 @@ io.on('connection', function(socket) {
         }
 
         games[code]["guessed"][codeIndex] = guessed;
-        
+        console.log("COMPLETE: "+complete);
         if(complete){
             
-            for(var p in games[code]["players"]){
-                var player = games[code]["players"][p];
-
-                var playerTasks = player["tasks"];
-       
-                playerTasks = playerTasks.filter(function(k){
-                    return k.id != "crackCode";
-                });
-                games[code]["players"][[p]]["tasks"] = playerTasks;
-
-            }
-            io.to(code.toString()).emit("globalFinish", "crackCode");
-            addTasksFrom("crackCode", code);
+            globalFinishTask("crackTheCode", code);
+            addTasksFrom("crackTheCode", code);
         }
         io.to(code.toString()).emit("update", games[code]);
 

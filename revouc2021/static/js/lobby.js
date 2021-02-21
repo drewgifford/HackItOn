@@ -1,6 +1,6 @@
 
 const path = "/static";
-const socket = io.connect("http://localhost:6942");
+const socket = io.connect("http://172.110.16.122:6942");
 
 
 $(document).ready(function(){
@@ -428,6 +428,7 @@ $(document).ready(function(){
     var successPlaying = false;
 
     socket.on("globalFinish", (currentTaskId) => {
+        console.log("Here we go", selectedTask, currentTaskId);
 
         if(currentTaskId == selectedTask && !successPlaying){
             successAudio.play();
